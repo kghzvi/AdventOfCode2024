@@ -2,6 +2,10 @@
 <TcSmProject xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.beckhoff.com/schemas/2012/07/TcSmProject" TcSmVersion="1.0" TcVersion="3.1.4026.12">
 	<Project ProjectGUID="{2437D890-CEA2-44AF-BD44-394EF5E6B9D2}" Target64Bit="true" ShowHideConfigurations="#x6">
 		<System>
+			<Settings MaxCpus="20" NonWinCpus="2" PCoreAffinity="4095" ECoreAffinity="1044480">
+				<Cpu CpuId="18"/>
+				<Cpu CpuId="19"/>
+			</Settings>
 			<Tasks>
 				<Task Id="3" Priority="20" CycleTime="100000" AmsPort="350" AdtTasks="true">
 					<Name>PlcTask</Name>
@@ -10,7 +14,7 @@
 		</System>
 		<Plc>
 			<Project GUID="{2A273DC6-AE19-4E46-83CE-A2A67BDB2C1E}" Name="AdventOfCode2024_Day02" PrjFilePath="AdventOfCode2024_Day02\AdventOfCode2024_Day02.plcproj" TmcFilePath="AdventOfCode2024_Day02\AdventOfCode2024_Day02.tmc" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
-				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{791C8E12-091C-8989-484E-FE8E2C4E8FA0}" TmcPath="AdventOfCode2024_Day02\AdventOfCode2024_Day02.tmc">
+				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{9BF9B5FD-238C-D01E-87EB-BEB05E71C422}" TmcPath="AdventOfCode2024_Day02\AdventOfCode2024_Day02.tmc">
 					<Name>AdventOfCode2024_Day02 Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 					<Contexts>

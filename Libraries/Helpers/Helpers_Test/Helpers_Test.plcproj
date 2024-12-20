@@ -3,38 +3,22 @@
   <PropertyGroup>
     <FileVersion>1.0.0.0</FileVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{2a273dc6-ae19-4e46-83ce-a2a67bdb2c1e}</ProjectGuid>
+    <ProjectGuid>{4c2488a6-5fad-4619-b937-6c7660a146ce}</ProjectGuid>
     <SubObjectsSortedByName>true</SubObjectsSortedByName>
     <DownloadApplicationInfo>true</DownloadApplicationInfo>
     <WriteProductVersion>false</WriteProductVersion>
     <GenerateTpy>false</GenerateTpy>
-    <Name>AdventOfCode2024_Day02</Name>
+    <Name>Helpers_Test</Name>
     <ProgramVersion>3.1.4026.12</ProgramVersion>
-    <Application>{d4c3bfbb-77db-4b8a-8ca6-c72ba4917eaa}</Application>
-    <TypeSystem>{7487b5f7-23a7-4fca-9bb6-b55d283c6484}</TypeSystem>
-    <Implicit_Task_Info>{524ac5cb-8586-4c50-a4c0-1a4aafa7a476}</Implicit_Task_Info>
-    <Implicit_KindOfTask>{58ff01c0-d3a1-4f27-a36c-fc011810017b}</Implicit_KindOfTask>
-    <Implicit_Jitter_Distribution>{5135b309-f584-482e-92fb-f7ec13074f9a}</Implicit_Jitter_Distribution>
-    <LibraryReferences>{1bce98b8-32e1-49d4-a138-30dd1f937eb2}</LibraryReferences>
+    <Application>{55348098-8d5e-4df8-a374-b437bf39a48e}</Application>
+    <TypeSystem>{7f1b93d4-8b5e-4067-9558-0fb5a8eff5dd}</TypeSystem>
+    <Implicit_Task_Info>{9f8bf7f6-5b54-4a26-9a6c-1f258a429614}</Implicit_Task_Info>
+    <Implicit_KindOfTask>{9a726421-7271-4435-9bd4-a29877a71c7e}</Implicit_KindOfTask>
+    <Implicit_Jitter_Distribution>{8c951234-f730-4a44-8f3c-091fd515db4b}</Implicit_Jitter_Distribution>
+    <LibraryReferences>{40ba7ac4-1b03-4838-9226-faf647789cb3}</LibraryReferences>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="DUTs\ERROR.TcDUT">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="GVLs\GLOBAL_CONSTANTS.TcGVL">
-      <SubType>Code</SubType>
-      <LinkAlways>true</LinkAlways>
-    </Compile>
     <Compile Include="PlcTask.TcTTO">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="POUs\Analysis\Analysis.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="POUs\FileReader\DUTs\STATE.TcDUT">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="POUs\FileReader\FileReader.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\MAIN.TcPOU">
@@ -44,17 +28,10 @@
   <ItemGroup>
     <Folder Include="DUTs" />
     <Folder Include="GVLs" />
-    <Folder Include="POUs\FileReader" />
-    <Folder Include="POUs\FileReader\DUTs" />
-    <Folder Include="POUs\Analysis" />
     <Folder Include="VISUs" />
     <Folder Include="POUs" />
   </ItemGroup>
   <ItemGroup>
-    <PlaceholderReference Include="SH_FileReader">
-      <DefaultResolution>SH_FileReader, * (Stefan Halder)</DefaultResolution>
-      <Namespace>SH_FileReader</Namespace>
-    </PlaceholderReference>
     <PlaceholderReference Include="Tc2_Standard">
       <DefaultResolution>Tc2_Standard, * (Beckhoff Automation GmbH)</DefaultResolution>
       <Namespace>Tc2_Standard</Namespace>
@@ -68,11 +45,6 @@
       <Namespace>Tc3_Module</Namespace>
       <SystemLibrary>true</SystemLibrary>
     </PlaceholderReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="AdventOfCode2024_Day02.tmc">
-      <SubType>Content</SubType>
-    </None>
   </ItemGroup>
   <ProjectExtensions>
     <PlcProjectOptions>

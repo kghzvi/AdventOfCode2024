@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Refactors>
+  <Renames>
+    <RenamedType>
+      <Type guid="9faf1c80-f3b2-4488-9e9b-a8e83294de44">POU</Type>
+      <From>POU</From>
+      <To>Absolute</To>
+    </RenamedType>
+  </Renames>
+</Refactors>

@@ -2,15 +2,7 @@
 <TcPlcObject Version="1.1.0.1">
   <POU Name="Analysis" Id="{1d1e40ed-f79c-44df-ac24-3b472246fdc9}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK Analysis
-VAR_INPUT
-END_VAR
 VAR
-	iLoopIndexFileContentArray : UINT;
-	sTempString : STRING(iC_MAX_STRING_LENGTH);
-	iLoopIndexString : UINT;
-	nNumElementsInLine : UINT;
-	sStringSubset : STRING(iC_MAX_STRING_LENGTH);
-	arsStringArray : ARRAY[0..7] OF STRING(2);
 	arnNumberArray : ARRAY[0..7] OF UINT;
 END_VAR
 ]]></Declaration>
@@ -18,20 +10,101 @@ END_VAR
       <ST><![CDATA[]]></ST>
     </Implementation>
     <Method Name="AnalyzeLine" Id="{b8d78072-f55e-417c-9fa4-5dcbaada27eb}">
-      <Declaration><![CDATA[METHOD AnalyzeLine : BOOL
+      <Declaration><![CDATA[METHOD AnalyzeLine
 VAR_INPUT
+	sTextLine : STRING;
+END_VAR
+VAR_OUTPUT
+	bIncreasing : BOOL;
+	bDecreasing : BOOL;
+	bClose : BOOL;
+END_VAR
+VAR
+	sCurrentString : STRING;
+	sSubString : STRING;
+	nIndexOfNextSpace : INT;
+	nLoopIndex : UINT;
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[FOR iLoopIndexFileContentArray := 0 TO iC_MAX_NUM_LINES_IN_FILE-1 DO
-	sTempString := fb_FileReader.GetLineByIndex(iLoopIndexFileContentArray);
-	nNumElementsInLine := ((LEN(sTempString) + 1)/3)-1;
-	FOR iLoopIndexString := 0 TO nNumElementsInLine DO
-		arsStringArray[iLoopIndexString] := MID(sTempString, 2, iLoopIndexString*3+1);
-		arnNumberArray[iLoopIndexString] := TO_UINT(arsStringArray[iLoopIndexString]);
-	END_FOR
-	bIncreasing := THIS^.CheckIncreasing();
-END_FOR]]></ST>
+        <ST><![CDATA[sSubString := sTextLine;
+nIndexOfNextSpace := FIND(sSubString, ' ');
+nLoopIndex := 0;
+WHILE nIndexOfNextSpace > 0 DO
+	sCurrentString := LEFT(sSubString, nIndexOfNextSpace-1);
+	sSubString := RIGHT(sSubString, LEN(sSubString)-nIndexOfNextSpace);
+	arnNumberArray[nLoopIndex] := TO_UINT(sCurrentString);
+	nIndexOfNextSpace:= FIND(sSubString, ' ');
+	nLoopIndex := nLoopIndex;
+END_WHILE
+arnNumberArray[nLoopIndex+1] := TO_UINT(sSubString);
+bIncreasing := THIS^.CheckIncreasing(nLoopIndex+1);
+bDecreasing := THIS^.CheckDecreasing(nLoopIndex+1);
+bClose := THIS^.CheckClose(nLoopIndex+1);
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="CheckClose" Id="{f6c18ddd-5609-419d-b098-cf14392fc482}">
+      <Declaration><![CDATA[METHOD CheckClose : BOOL
+VAR_INPUT
+	nNumElementsInLine : UINT;
+END_VAR
+VAR
+	iLoopIndex : UINT;
+	nDistance : INT;
+	bStepClose : BOOL;
+	bAllClose : BOOL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[bAllClose := TRUE;
+FOR iLoopIndex := 0 TO nNumElementsInLine-2 DO
+	nDistance := arnNumberArray[iLoopIndex] - arnNumberArray[iLoopIndex+1];
+	nDistance := ABS(nDistance);
+	bStepClose := nDistance >= 1 AND nDistance <=3; 
+	bAllClose := bAllClose AND bStepClose;			
+END_FOR
+CheckClose := bAllClose;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="CheckDecreasing" Id="{31cdb210-42b1-49f8-906a-93cd577c0ab4}">
+      <Declaration><![CDATA[METHOD CheckDecreasing : BOOL
+VAR_INPUT
+	nNumElementsInLine : UINT;
+END_VAR
+VAR
+	iLoopIndex : UINT;
+	bStepDecreasing : BOOL;
+	bStrictlyDecreasing : BOOL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[bStrictlyDecreasing := TRUE;
+FOR iLoopIndex := 0 TO nNumElementsInLine-2 DO
+	bStepDecreasing := arnNumberArray[iLoopIndex] > arnNumberArray[iLoopIndex+1];
+	bStrictlyDecreasing := bStrictlyDecreasing AND bStepDecreasing;			
+END_FOR
+CheckDecreasing := bStrictlyDecreasing;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="CheckIncreasing" Id="{1bb71b02-f0ac-4030-946c-d08e773724bd}">
+      <Declaration><![CDATA[METHOD CheckIncreasing : BOOL
+VAR_INPUT
+	nNumElementsInLine : UINT;
+END_VAR
+VAR
+	iLoopIndex : UINT;
+	bStepIncreasing : BOOL;
+	bStrictlyIncreasing : BOOL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[bStrictlyIncreasing := TRUE;
+FOR iLoopIndex := 0 TO nNumElementsInLine-2 DO
+	bStepIncreasing := arnNumberArray[iLoopIndex] < arnNumberArray[iLoopIndex+1];
+	bStrictlyIncreasing := bStrictlyIncreasing AND bStepIncreasing;			
+END_FOR
+CheckIncreasing := bStrictlyIncreasing;]]></ST>
       </Implementation>
     </Method>
   </POU>

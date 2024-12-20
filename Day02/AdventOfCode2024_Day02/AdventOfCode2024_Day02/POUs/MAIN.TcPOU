@@ -5,11 +5,22 @@
 VAR
 	sFilePath : T_MaxString := 'E:\Projects\Twincat\AdventOfCode\Day02\Day2Input.txt'; //'C:\temp\HelloWorld.txt';// 
 	fb_FileReader : SH_FileReader.FileReader;
-	bFileReaderDone : BOOL;	
-		
+	bFileReaderDone : BOOL;		
 	stFileReaderError : SH_FileReader.ERROR;
 
+	nLoopIndexLoadBalancer : USINT;
+	nOffsetInnerLoop : UINT;
+	nLoopIndexFileContentArray : UINT;
+	sCurrentLine : STRING(iC_MAX_STRING_LENGTH);
+
 	fb_Analysis : Analysis;
+	bStrictlyIncreasing : BOOL;
+	bStrictlyDecreasing : BOOL;
+	bAllClose : BOOL;
+	bReportIsSafe : BOOL;
+	nNumSafeReports : UINT;
+	
+	arsAnalyzedArray : ARRAY[0..1000] OF STRING;
 	
 	bReadFile : BOOL;
 	bAnalyzeFile : BOOL;
@@ -17,41 +28,59 @@ END_VAR
 ]]></Declaration>
     <Implementation>
       <ST><![CDATA[fb_FileReader();
+fb_Analysis();
 
 bFileReaderDone := fb_FileReader.ReadFile(bExecute := bReadFile, sFilePath := sFilePath, stError => stFileReaderError);
 IF bReadFile THEN
 	bReadFile := FALSE;
 END_IF
 
-IF bAnalyzeFile THEN
-	bAnalyzeFile := FALSE;
-	FOR iLoopIndexFileContentArray := 0 TO iC_MAX_NUM_LINES_IN_FILE-1 DO
-		sTempString := fb_FileReader.GetLineByIndex(iLoopIndexFileContentArray);
-		nNumElementsInLine := ((LEN(sTempString) + 1)/3)-1;
-		FOR iLoopIndexString := 0 TO nNumElementsInLine DO
-			arsStringArray[iLoopIndexString] := MID(sTempString, 2, iLoopIndexString*3+1);
-			arnNumberArray[iLoopIndexString] := TO_UINT(arsStringArray[iLoopIndexString]);
-		END_FOR
-		bIncreasing := THIS^.CheckIncreasing();
+IF bFileReaderDone AND bAnalyzeFile THEN
+	nNumSafeReports := 0;
+	
+	FOR nLoopIndexLoadBalancer := 0 TO 9 DO
+		CASE nLoopIndexLoadBalancer OF
+			0:
+				a_AnalyzeSection();
+			1:
+				a_AnalyzeSection();
+			2:
+				a_AnalyzeSection();
+			3:
+				a_AnalyzeSection();
+			4:
+				a_AnalyzeSection();
+			5:
+				a_AnalyzeSection();
+			6:
+				a_AnalyzeSection();
+			7:
+				a_AnalyzeSection();
+			8:
+				a_AnalyzeSection();
+			9:
+				a_AnalyzeSection();
+		END_CASE
 	END_FOR
+	
+
 END_IF]]></ST>
     </Implementation>
-    <Method Name="CheckIncreasing" Id="{adf68039-f2d9-49ab-bdad-bfc664ad7de9}">
-      <Declaration><![CDATA[METHOD CheckIncreasing : BOOL
-VAR
-	iLoopIndex : UINT;
-	bStepIncreasing : BOOL;
-	bIncreasing : BOOL;
-END_VAR
-]]></Declaration>
+    <Action Name="a_AnalyzeSection" Id="{7f0f009c-232a-4f33-8336-a644f5d2d9ec}">
       <Implementation>
-        <ST><![CDATA[bIncreasing := TRUE;
-FOR iLoopIndex := 0 TO nNumElementsInLine DO
-	bStepIncreasing := arnNumberArray[iLoopIndex] < arnNumberArray[iLoopIndex+1];
-	bIncreasing := bIncreasing AND bStepIncreasing;			
-END_FOR
-CheckIncreasing := bIncreasing;]]></ST>
+        <ST><![CDATA[nOffsetInnerLoop := nLoopIndexLoadBalancer * (iC_MAX_NUM_LINES_IN_FILE/10);
+FOR nLoopIndexFileContentArray := nLoopIndexLoadBalancer TO nOffsetInnerLoop+(iC_MAX_NUM_LINES_IN_FILE/10)-1 DO
+	sCurrentLine := fb_FileReader.GetLineByIndex(nLoopIndexFileContentArray);
+	fb_Analysis.AnalyzeLine(sTextLine := sCurrentLine, bIncreasing => bStrictlyIncreasing, bDecreasing => bStrictlyDecreasing, bClose => bAllClose);
+	bReportIsSafe := (bStrictlyDecreasing OR bStrictlyIncreasing) AND bAllClose;
+	IF bReportIsSafe THEN
+		arsAnalyzedArray[nLoopIndexFileContentArray] := CONCAT(sCurrentLine, ' - SAFE');
+		nNumSafeReports := nNumSafeReports + 1;	
+	ELSE
+		arsAnalyzedArray[nLoopIndexFileContentArray] := CONCAT(sCurrentLine, ' - UNSAFE');	
+	END_IF
+END_FOR]]></ST>
       </Implementation>
-    </Method>
+    </Action>
   </POU>
 </TcPlcObject>

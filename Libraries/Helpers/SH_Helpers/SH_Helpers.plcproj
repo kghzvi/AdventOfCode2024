@@ -3,77 +3,20 @@
   <PropertyGroup>
     <FileVersion>1.0.0.0</FileVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{2a273dc6-ae19-4e46-83ce-a2a67bdb2c1e}</ProjectGuid>
+    <ProjectGuid>{0f7665f5-3705-404e-99b7-b5835b4001f1}</ProjectGuid>
     <SubObjectsSortedByName>true</SubObjectsSortedByName>
     <DownloadApplicationInfo>true</DownloadApplicationInfo>
     <WriteProductVersion>false</WriteProductVersion>
     <GenerateTpy>false</GenerateTpy>
-    <Name>AdventOfCode2024_Day02</Name>
+    <Name>SH_Helpers</Name>
     <ProgramVersion>3.1.4026.12</ProgramVersion>
-    <Application>{d4c3bfbb-77db-4b8a-8ca6-c72ba4917eaa}</Application>
-    <TypeSystem>{7487b5f7-23a7-4fca-9bb6-b55d283c6484}</TypeSystem>
-    <Implicit_Task_Info>{524ac5cb-8586-4c50-a4c0-1a4aafa7a476}</Implicit_Task_Info>
-    <Implicit_KindOfTask>{58ff01c0-d3a1-4f27-a36c-fc011810017b}</Implicit_KindOfTask>
-    <Implicit_Jitter_Distribution>{5135b309-f584-482e-92fb-f7ec13074f9a}</Implicit_Jitter_Distribution>
-    <LibraryReferences>{1bce98b8-32e1-49d4-a138-30dd1f937eb2}</LibraryReferences>
+    <Application>{2fbc55e1-1477-41a5-9667-8e3353a95ecf}</Application>
+    <TypeSystem>{795ca85a-9aa7-4c3a-8dd3-7900c236b20e}</TypeSystem>
+    <Implicit_Task_Info>{ffc73011-2463-4fa4-925e-5316d4d5e603}</Implicit_Task_Info>
+    <Implicit_KindOfTask>{2e5a0c58-4d6f-4e0d-9211-5959433a2b9e}</Implicit_KindOfTask>
+    <Implicit_Jitter_Distribution>{d522b6f8-9dd1-4f2e-aa7d-f3dfb6eced15}</Implicit_Jitter_Distribution>
+    <LibraryReferences>{bddf27f9-56a5-4488-a82e-054a0e1c82d4}</LibraryReferences>
   </PropertyGroup>
-  <ItemGroup>
-    <Compile Include="DUTs\ERROR.TcDUT">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="GVLs\GLOBAL_CONSTANTS.TcGVL">
-      <SubType>Code</SubType>
-      <LinkAlways>true</LinkAlways>
-    </Compile>
-    <Compile Include="PlcTask.TcTTO">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="POUs\Analysis\Analysis.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="POUs\FileReader\DUTs\STATE.TcDUT">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="POUs\FileReader\FileReader.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="POUs\MAIN.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="DUTs" />
-    <Folder Include="GVLs" />
-    <Folder Include="POUs\FileReader" />
-    <Folder Include="POUs\FileReader\DUTs" />
-    <Folder Include="POUs\Analysis" />
-    <Folder Include="VISUs" />
-    <Folder Include="POUs" />
-  </ItemGroup>
-  <ItemGroup>
-    <PlaceholderReference Include="SH_FileReader">
-      <DefaultResolution>SH_FileReader, * (Stefan Halder)</DefaultResolution>
-      <Namespace>SH_FileReader</Namespace>
-    </PlaceholderReference>
-    <PlaceholderReference Include="Tc2_Standard">
-      <DefaultResolution>Tc2_Standard, * (Beckhoff Automation GmbH)</DefaultResolution>
-      <Namespace>Tc2_Standard</Namespace>
-    </PlaceholderReference>
-    <PlaceholderReference Include="Tc2_System">
-      <DefaultResolution>Tc2_System, * (Beckhoff Automation GmbH)</DefaultResolution>
-      <Namespace>Tc2_System</Namespace>
-    </PlaceholderReference>
-    <PlaceholderReference Include="Tc3_Module">
-      <DefaultResolution>Tc3_Module, * (Beckhoff Automation GmbH)</DefaultResolution>
-      <Namespace>Tc3_Module</Namespace>
-      <SystemLibrary>true</SystemLibrary>
-    </PlaceholderReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="AdventOfCode2024_Day02.tmc">
-      <SubType>Content</SubType>
-    </None>
-  </ItemGroup>
   <ProjectExtensions>
     <PlcProjectOptions>
       <XmlArchive>
@@ -84,6 +27,12 @@
         <v>{192FAD59-8248-4824-A8DE-9177C94C195A}</v>
         <o>
           <v n="Name">"{192FAD59-8248-4824-A8DE-9177C94C195A}"</v>
+          <d n="SubKeys" t="Hashtable" />
+          <d n="Values" t="Hashtable" />
+        </o>
+        <v>{246001F4-279D-43AC-B241-948EB31120E1}</v>
+        <o>
+          <v n="Name">"{246001F4-279D-43AC-B241-948EB31120E1}"</v>
           <d n="SubKeys" t="Hashtable" />
           <d n="Values" t="Hashtable" />
         </o>
