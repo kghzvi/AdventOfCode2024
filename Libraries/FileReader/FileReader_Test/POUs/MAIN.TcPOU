@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="MAIN" Id="{135bc1d7-2c12-4b72-8545-fb496d20805a}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM MAIN
+VAR
+	fb_FileReader : SH_FileReader.FileReader;
+	
+	bReadFile : BOOL;
+	sFilePath : STRING := 'E:\Projects\Twincat\AdventOfCode\Day02\Day2Input.txt';
+	bFileReaderDone : BOOL;
+	stError : SH_FileReader.ERROR;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[fb_FileReader();
+
+
+bFileReaderDone := fb_FileReader.ReadFile(bExecute := bReadFile, sFilePath := sFilePath, stError => stError);
+IF bReadFile THEN
+	bReadFile := FALSE;
+END_IF]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>

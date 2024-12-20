@@ -1,0 +1,57 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="MAIN" Id="{cb2c011b-217c-4530-a688-e51bc0e036d8}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM MAIN
+VAR
+	sFilePath : T_MaxString := 'E:\Projects\Twincat\AdventOfCode\Day02\Day2Input.txt'; //'C:\temp\HelloWorld.txt';// 
+	fb_FileReader : SH_FileReader.FileReader;
+	bFileReaderDone : BOOL;	
+		
+	stFileReaderError : SH_FileReader.ERROR;
+
+	fb_Analysis : Analysis;
+	
+	bReadFile : BOOL;
+	bAnalyzeFile : BOOL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[fb_FileReader();
+
+bFileReaderDone := fb_FileReader.ReadFile(bExecute := bReadFile, sFilePath := sFilePath, stError => stFileReaderError);
+IF bReadFile THEN
+	bReadFile := FALSE;
+END_IF
+
+IF bAnalyzeFile THEN
+	bAnalyzeFile := FALSE;
+	FOR iLoopIndexFileContentArray := 0 TO iC_MAX_NUM_LINES_IN_FILE-1 DO
+		sTempString := fb_FileReader.GetLineByIndex(iLoopIndexFileContentArray);
+		nNumElementsInLine := ((LEN(sTempString) + 1)/3)-1;
+		FOR iLoopIndexString := 0 TO nNumElementsInLine DO
+			arsStringArray[iLoopIndexString] := MID(sTempString, 2, iLoopIndexString*3+1);
+			arnNumberArray[iLoopIndexString] := TO_UINT(arsStringArray[iLoopIndexString]);
+		END_FOR
+		bIncreasing := THIS^.CheckIncreasing();
+	END_FOR
+END_IF]]></ST>
+    </Implementation>
+    <Method Name="CheckIncreasing" Id="{adf68039-f2d9-49ab-bdad-bfc664ad7de9}">
+      <Declaration><![CDATA[METHOD CheckIncreasing : BOOL
+VAR
+	iLoopIndex : UINT;
+	bStepIncreasing : BOOL;
+	bIncreasing : BOOL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[bIncreasing := TRUE;
+FOR iLoopIndex := 0 TO nNumElementsInLine DO
+	bStepIncreasing := arnNumberArray[iLoopIndex] < arnNumberArray[iLoopIndex+1];
+	bIncreasing := bIncreasing AND bStepIncreasing;			
+END_FOR
+CheckIncreasing := bIncreasing;]]></ST>
+      </Implementation>
+    </Method>
+  </POU>
+</TcPlcObject>

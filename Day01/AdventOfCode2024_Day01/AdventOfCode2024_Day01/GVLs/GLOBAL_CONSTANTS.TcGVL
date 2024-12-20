@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <GVL Name="GLOBAL_CONSTANTS" Id="{33fce9e8-7bd6-4296-b3e6-284c56162f08}">
+    <Declaration><![CDATA[VAR_GLOBAL CONSTANT
+	iC_MAX_NUM_LINES_IN_FILE : UINT := 999;
+	iC_MAX_STRING_LENGTH : UINT := 50;
+END_VAR]]></Declaration>
+  </GVL>
+</TcPlcObject>

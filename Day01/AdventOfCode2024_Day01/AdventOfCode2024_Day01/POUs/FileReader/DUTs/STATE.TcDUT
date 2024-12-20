@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <DUT Name="STATE" Id="{c55a6252-b276-41a7-b20b-2a6fafc09e52}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+{attribute 'strict'}
+{attribute 'to_string'}
+TYPE STATE :
+(
+	Idle := 0,
+	OpenFile := 1,
+	OpenFileAwaitFinish := 2,
+	ReadFile := 3,
+	ReadFileAwaitFinish := 4,
+	CloseFile := 5,
+	CloseFileAwaitFinish := 6,
+	Error := 99
+);
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

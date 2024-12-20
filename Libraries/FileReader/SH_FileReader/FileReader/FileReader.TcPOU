@@ -1,0 +1,170 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="FileReader" Id="{689eeb37-5304-4aef-9335-365c52309ff2}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FileReader
+VAR CONSTANT
+	iC_MAX_NUM_LINES_IN_FILE : UINT := 1000;
+	iC_MAX_STRING_LENGTH : UINT := 25;
+END_VAR
+VAR
+	_bBusy : BOOL;
+	_sFilePath : STRING;
+	_arsFileContent : ARRAY [0..iC_MAX_NUM_LINES_IN_FILE] OF STRING(iC_MAX_STRING_LENGTH);
+	
+	fbi_FileOpen : FB_FileOpen;
+	fbi_FileGets : FB_FileGets;
+	fbi_FileClose : FB_FileClose;
+	
+	eState : STATE := STATE.Idle;
+	
+	hFileHandle : UINT;
+	iFileContentNextIndex : UINT;
+	stError : ERROR;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[CASE eState OF
+	State.Idle:
+		// Do nothing
+	State.OpenFile:
+		_bBusy := TRUE;
+		iFileContentNextIndex := 0;
+		MEMSET(ADR(_arsFileContent), 0, SIZEOF(_arsFileContent));
+		fbi_FileOpen(sPathName := sFilePath, nMode := FOPEN_MODEREAD OR FOPEN_MODETEXT, ePath := PATH_GENERIC, bExecute := TRUE, bError => stError.bError, nErrId => stError.nErrorCode);
+		eState := STATE.OpenFileAwaitFinish;
+		
+	State.OpenFileAwaitFinish:
+		fbi_FileOpen(bExecute := FALSE, hFile => hFileHandle, bError => stError.bError, nErrId => stError.nErrorCode);
+		IF NOT fbi_FileOpen.bBusy THEN
+			IF NOT stError.bError THEN
+				eState := STATE.ReadFile;
+			ELSE
+				eState := STATE.Error;
+			END_IF
+		END_IF
+		
+	State.ReadFile:
+		fbi_FileGets(hFile := hFileHandle, bExecute := TRUE, bError => stError.bError, nErrId => stError.nErrorCode);
+		eState := STATE.ReadFileAwaitFinish;
+		
+	State.ReadFileAwaitFinish:
+		fbi_FileGets(bExecute := FALSE, bError => stError.bError, nErrId => stError.nErrorCode);
+		IF NOT fbi_FileGets.bBusy THEN
+			IF NOT stError.bError THEN
+				_arsFileContent[iFileContentNextIndex] := fbi_FileGets.sLine;
+				IF fbi_FileGets.bEOF THEN
+					eState := STATE.CloseFile;
+				ELSE
+					eState := STATE.ReadFile;
+					iFileContentNextIndex := iFileContentNextIndex+1;	
+				END_IF
+			ELSE
+				eState := STATE.Error;
+			END_IF	
+		END_IF
+		
+	State.CloseFile:
+		fbi_FileClose(hFile := hFileHandle, bExecute := TRUE, bError => stError.bError, nErrId => stError.nErrorCode);
+		eState := STATE.CloseFileAwaitFinish;
+		
+	State.CloseFileAwaitFinish:
+		fbi_FileClose(bExecute := FALSE, bError => stError.bError, nErrId => stError.nErrorCode);
+		IF NOT fbi_FileClose.bBusy THEN
+			IF NOT stError.bError THEN
+				eState := STATE.Idle;
+			ELSE
+				eState := STATE.Error;
+			END_IF
+			_bBusy := FALSE;
+			hFileHandle := 0;
+		END_IF
+		
+	State.Error:
+		eState := STATE.Idle;
+END_CASE]]></ST>
+    </Implementation>
+    <Property Name="arsFileContent" Id="{492efb3a-96e3-4092-830b-dbb6b536b1eb}">
+      <Declaration><![CDATA[PROPERTY arsFileContent : ARRAY [0..iC_MAX_NUM_LINES_IN_FILE] OF STRING(iC_MAX_STRING_LENGTH)]]></Declaration>
+      <Get Name="Get" Id="{ed4628f1-a153-431c-a930-2df72dc12712}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[arsFileContent := _arsFileContent;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="bBusy" Id="{ad38d7dc-0af4-480b-97bf-0e1b9f974b85}">
+      <Declaration><![CDATA[PROPERTY bBusy : BOOL]]></Declaration>
+      <Get Name="Get" Id="{82ef4ecc-1159-4fbc-be08-50fd3050cfb7}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[bBusy := _bBusy;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Method Name="GetLineByIndex" Id="{d3e44f50-c4ad-4eeb-adf9-81e9829c74ad}">
+      <Declaration><![CDATA[METHOD GetLineByIndex : STRING
+VAR_INPUT
+	iIndex : UINT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[GetLineByIndex := _arsFileContent[iIndex];]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="ReadFile" Id="{a5606e0f-b65f-4ab4-84d7-b1414c97660e}">
+      <Declaration><![CDATA[METHOD ReadFile : BOOL
+VAR_INPUT
+	bExecute : BOOL;
+	sFilePath : STRING;
+END_VAR
+VAR_OUTPUT
+	stError : ERROR;
+END_VAR
+VAR
+	bExecute_RTrig : R_TRIG;
+END_VAR
+
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[_sFilePath := sFilePath;
+bExecute_RTrig(CLK := bExecute);
+IF bExecute_RTRIG.Q THEN
+	IF eState = STATE.Idle THEN
+		_bBusy := TRUE;
+		eState := STATE.OpenFile;
+		stError.bError := FALSE;
+		stError.nErrorCode := 0;
+	ELSE
+		stError.bError := TRUE;
+		stError.nErrorCode := 1; //FB not ready		
+	END_IF
+END_IF
+ReadFile := NOT _bBusy OR stError.bError;
+]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="sFilePath" Id="{a0eecea2-8220-4631-ab39-242280f23e1f}">
+      <Declaration><![CDATA[PROPERTY sFilePath : STRING]]></Declaration>
+      <Get Name="Get" Id="{601553ad-e273-4872-bdfa-93e8d0c0befd}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[sFilePath := _sFilePath;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{cbb402c5-05bd-4d49-aa9d-7fdb22b46933}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_sFilePath := sFilePath;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+  </POU>
+</TcPlcObject>

@@ -1,0 +1,81 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="MAIN" Id="{f3dfad94-cdf6-4a4b-addd-e1ba9705ef60}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM MAIN
+VAR
+	fbSystemTime : GETSYSTEMTIME;
+    timeAsFileTime : T_FILETIME;
+    timeAsDT : DT;	
+
+	fbi_FileReader : FileReader;
+	
+	sFilePath : T_MaxString := 'E:\Projects\Twincat\AdventOfCode\Day01\Day1Input.txt'; //'C:\temp\HelloWorld.txt';// 
+	
+	arsFileContent : ARRAY [0..iC_MAX_NUM_LINES_IN_FILE] OF STRING(iC_MAX_STRING_LENGTH);
+	ariFileContentA : ARRAY[0..iC_MAX_NUM_LINES_IN_FILE] OF UDINT;
+	ariFileContentB : ARRAY[0..iC_MAX_NUM_LINES_IN_FILE] OF UDINT;
+	iLoopIndexFileContentArray : UINT;
+	jLoopIndexFileContentArray : UINT;
+	sTempString : STRING;
+	sTempStringSplit : STRING;
+	sTempStringSplit2 : STRING;
+	iDifference : DINT;
+	
+	iSumOfDifferences : DINT;
+	iSumOfScore : DINT;
+	
+	bReadFile : BOOL;
+	bConvertArray : BOOL;
+	bCalcSimilarity2 : BOOL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[fbSystemTime(timeLoDW=>timeAsFileTime.dwLowDateTime, timeHiDW=>timeAsFileTime.dwHighDateTime);
+
+fbi_FileReader();
+
+IF bReadFile THEN
+	bReadFile := FALSE;
+	fbi_FileReader.ReadFile(sFilePath);
+END_IF
+
+IF bConvertArray THEN
+	bConvertArray := FALSE;
+	iLoopIndexFileContentArray := 0;
+	iSumOfDifferences := 0;
+	FOR iLoopIndexFileContentArray := 0 TO iC_MAX_NUM_LINES_IN_FILE DO
+		sTempString := fbi_FileReader.GetLineByIndex(iLoopIndexFileContentArray);
+		sTempStringSplit := MID(sTempString,5,1);
+		sTempStringSplit2 := MID(sTempString,5,9);
+		
+		ariFileContentA[iLoopIndexFileContentArray] := TO_UDINT(sTempStringSplit);
+		ariFileContentB[iLoopIndexFileContentArray] := TO_UDINT(sTempStringSplit2);													
+	END_FOR
+	BubbleSort(ariFileContentA);
+	BubbleSort(ariFileContentB);
+	FOR iLoopIndexFileContentArray := 0 TO iC_MAX_NUM_LINES_IN_FILE DO
+		iDifference := ariFileContentA[iLoopIndexFileContentArray] - ariFileContentB[iLoopIndexFileContentArray];
+				IF iDifference >= 0 THEN
+					iSumOfDifferences := iSumOfDifferences + iDifference;
+				ELSE
+					iSumOfDifferences := iSumOfDifferences - iDifference; 	
+				END_IF
+	END_FOR	
+END_IF
+
+IF bCalcSimilarity2 THEN
+	bCalcSimilarity2 := FALSE;
+	iSumOfScore := 0;
+	FOR iLoopIndexFileContentArray := 0 TO iC_MAX_NUM_LINES_IN_FILE DO
+		FOR jLoopIndexFileContentArray := 0 TO iC_MAX_NUM_LINES_IN_FILE DO
+			IF ariFileContentA[iLoopIndexFileContentArray] = ariFileContentB[jLoopIndexFileContentArray] THEN
+				iSumOfScore := iSumOfScore + TO_DINT(ariFileContentA[iLoopIndexFileContentArray]);
+			END_IF
+		END_FOR
+	END_FOR
+END_IF
+
+]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>

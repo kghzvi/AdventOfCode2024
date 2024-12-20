@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="BubbleSort" Id="{7cf2d451-baa9-4429-a093-703dee28a110}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION BubbleSort : BOOL
+VAR_IN_OUT
+	arrValues : ARRAY[0..iC_MAX_NUM_LINES_IN_FILE] OF UDINT;
+END_VAR
+VAR
+	i, j : UDINT;
+	temp : UDINT;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[// Bubble Sort Algorithmus
+FOR i := 0 TO iC_MAX_NUM_LINES_IN_FILE-1 DO
+    FOR j := 0 TO iC_MAX_NUM_LINES_IN_FILE-1 DO
+        IF arrValues[j] > arrValues[j + 1] THEN
+            // Werte tauschen
+            temp := arrValues[j];
+            arrValues[j] := arrValues[j + 1];
+            arrValues[j + 1] := temp;
+        END_IF
+    END_FOR
+END_FOR;]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>

@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <DUT Name="ERROR" Id="{a120fa65-10d4-4ab4-a735-57ffb890ea80}">
+    <Declaration><![CDATA[TYPE ERROR :
+STRUCT
+	bError : BOOL;
+	nErrorCode : UDINT;
+	dtCurrentTime : DT;
+END_STRUCT
+END_TYPE
+
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

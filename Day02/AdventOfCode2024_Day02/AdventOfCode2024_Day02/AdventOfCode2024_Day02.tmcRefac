@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Refactors>
+  <Renames>
+    <RenamedType>
+      <Type guid="b8d78072-f55e-417c-9fa4-5dcbaada27eb">ANALYZEFILE</Type>
+      <From>AnalyzeFile</From>
+      <To>AnalyzeLine</To>
+    </RenamedType>
+  </Renames>
+</Refactors>
