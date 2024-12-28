@@ -10,6 +10,7 @@ VAR
 
 	nLoopIndexLoadBalancer : USINT;
 	nOffsetInnerLoop : UINT;
+	nUpperOffsetInnerLoop : UINT;
 	nLoopIndexFileContentArray : UINT;
 	sCurrentLine : STRING(iC_MAX_STRING_LENGTH);
 
@@ -38,7 +39,7 @@ END_IF
 IF bFileReaderDone AND bAnalyzeFile THEN
 	nNumSafeReports := 0;
 	
-	FOR nLoopIndexLoadBalancer := 0 TO 9 DO
+	IF nLoopIndexLoadBalancer < 10 THEN
 		CASE nLoopIndexLoadBalancer OF
 			0:
 				a_AnalyzeSection();
@@ -61,15 +62,18 @@ IF bFileReaderDone AND bAnalyzeFile THEN
 			9:
 				a_AnalyzeSection();
 		END_CASE
-	END_FOR
-	
-
+		nLoopIndexLoadBalancer := nLoopIndexLoadBalancer + 1;	
+	ELSE
+		nLoopIndexLoadBalancer := 0;
+		bAnalyzeFile := FALSE;	
+	END_IF
 END_IF]]></ST>
     </Implementation>
     <Action Name="a_AnalyzeSection" Id="{7f0f009c-232a-4f33-8336-a644f5d2d9ec}">
       <Implementation>
         <ST><![CDATA[nOffsetInnerLoop := nLoopIndexLoadBalancer * (iC_MAX_NUM_LINES_IN_FILE/10);
-FOR nLoopIndexFileContentArray := nLoopIndexLoadBalancer TO nOffsetInnerLoop+(iC_MAX_NUM_LINES_IN_FILE/10)-1 DO
+nUpperOffsetInnerLoop := nOffsetInnerLoop+(iC_MAX_NUM_LINES_IN_FILE/10)-1;
+FOR nLoopIndexFileContentArray := nLoopIndexLoadBalancer TO nUpperOffsetInnerLoop DO
 	sCurrentLine := fb_FileReader.GetLineByIndex(nLoopIndexFileContentArray);
 	fb_Analysis.AnalyzeLine(sTextLine := sCurrentLine, bIncreasing => bStrictlyIncreasing, bDecreasing => bStrictlyDecreasing, bClose => bAllClose);
 	bReportIsSafe := (bStrictlyDecreasing OR bStrictlyIncreasing) AND bAllClose;
